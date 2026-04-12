@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ToppersWay</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; }
+
+    :root {
+      --bg:       #0d0f14;
+      --bg2:      #111318;
+      --surface:  #181b22;
+      --surface2: #1e2230;
+      --card:     #181b22;
+      --border:   #272b38;
+      --border2:  #333848;
+      --p1:       #00e5a0;
+      --p2:       #00c988;
+      --p3:       #00906a;
+      --p-glow:   rgba(0,229,160,0.18);
+      --red:      #ff5c5c;
+      --orange:   #ffaa44;
+      --text:     #edf0f7;
+      --text2:    #8b93a9;
+      --text3:    #4a5168;
+      --r:        8px;
+      --r-lg:     12px;
+      --r-xl:     16px;
+      --sh:       0 1px 4px rgba(0,0,0,0.4);
+      --sh-md:    0 4px 16px rgba(0,0,0,0.35);
+      --sh-lg:    0 12px 48px rgba(0,0,0,0.55);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    #topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      height: 62px;
+      background: rgba(13,15,20,0.9);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 24px; gap: 16px;
+    }
+    .logo-box {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 6px 12px; cursor: default;
+      box-shadow: 0 0 20px var(--p-glow);
+    }
+    .logo-lines { display: flex; flex-direction: column; line-height: 1.15; }
+    .logo-l1, .logo-l2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 0.78rem; color: var(--text);
+    }
+    .logo-chevron { font-size: 0.75rem; color: var(--p1); letter-spacing: -3px; }
+    .search-wrap { flex: 1; max-width: 480px; position: relative; }
+    .search-wrap input {
+      width: 100%; height: 38px; padding: 0 16px 0 40px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; font-family: 'Inter', sans-serif;
+      font-size: 0.88rem; color: var(--text); outline: none; transition: all 0.2s;
+    }
+    .search-wrap input:focus {
+      border-color: var(--p1); background: var(--surface2);
+      box-shadow: 0 0 0 3px var(--p-glow);
+    }
+    .search-wrap input::placeholder { color: var(--text3); }
+    .search-icon {
+      position: absolute; left: 13px; top: 50%;
+      transform: translateY(-50%); color: var(--text3);
+      display: flex; pointer-events: none;
+    }
+
+    .help-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, rgba(0,229,160,0.07), rgba(0,229,160,0.02));
+      border: 1px solid rgba(0,229,160,0.14);
+      border-radius: var(--r-lg); padding: 18px 24px; margin-bottom: 14px;
+      animation: fadeUp 0.4s cubic-bezier(.16,1,.3,1) both;
+    }
+    .hb-left { display: flex; align-items: center; gap: 14px; }
+    .hb-icon { font-size: 2.2rem; }
+    .hb-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+    .hb-sub { font-size: 0.83rem; color: var(--text2); }
+    .hb-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--p1); color: #050804; padding: 10px 22px;
+      border-radius: var(--r); font-size: 0.88rem; font-weight: 700;
+      text-decoration: none; white-space: nowrap; flex-shrink: 0;
+      box-shadow: 0 4px 18px rgba(0,229,160,0.3); transition: all 0.2s;
+    }
+    .hb-btn:hover { background: #00ffb3; transform: translateY(-1px); }
+
+    .alert-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,92,92,0.05); border: 1px solid rgba(255,92,92,0.16);
+      border-radius: var(--r-lg); padding: 16px 24px; margin-bottom: 28px;
+      animation: fadeUp 0.4s cubic-bezier(.16,1,.3,1) 0.06s both;
+    }
+    .ab-left { display: flex; align-items: center; gap: 14px; }
+    .ab-icon { font-size: 2rem; flex-shrink: 0; }
+    .ab-title { font-size: 0.9rem; font-weight: 700; color: var(--red); margin-bottom: 2px; }
+    .ab-sub { font-size: 0.8rem; color: var(--text2); }
+    .ab-btns { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .ab-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 18px; border-radius: var(--r);
+      font-size: 0.83rem; font-weight: 600; text-decoration: none;
+      transition: all 0.2s; cursor: pointer; white-space: nowrap; border: none;
+    }
+    .ab-btn.primary { background: var(--red); color: #fff; box-shadow: 0 3px 12px rgba(255,92,92,0.3); }
+    .ab-btn.primary:hover { background: #e03030; transform: translateY(-1px); }
+    .ab-btn.outline { background: transparent; border: 1px solid var(--red); color: var(--red); }
+    .ab-btn.outline:hover { background: rgba(255,92,92,0.08); }
+
+    .dash-wrap { max-width: 1280px; margin: 0 auto; padding: 90px 24px 60px; }
+    .cs-head { display: flex; align-items: center; gap: 9px; margin-bottom: 18px; }
+    .cs-icon { font-size: 1.15rem; }
+    .cs-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem; font-weight: 800; color: var(--text);
+    }
+    #subjectsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      justify-content: center;
+    }
+    .scard {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden;
+      cursor: pointer; transition: all 0.22s;
+      animation: fadeUp 0.4s cubic-bezier(.16,1,.3,1) both;
+      box-shadow: var(--sh);
+    }
+    .scard:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 52px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,229,160,0.2);
+      border-color: rgba(0,229,160,0.2);
+    }
+    .sc-thumb {
+      position: relative; overflow: hidden; height: 160px;
+      background: linear-gradient(135deg, #1a1f2e, #0d0f18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+    }
+    .sc-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .sc-trending {
+      position: absolute; top: 10px; left: 10px;
+      background: linear-gradient(135deg, #ffaa44, #ff7200);
+      color: #fff; font-size: 0.6rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      box-shadow: 0 2px 10px rgba(255,114,0,0.45);
+    }
+    .sc-price {
+      position: absolute; top: 10px; right: 10px;
+      background: rgba(0,0,0,0.72); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 6px; padding: 4px 8px;
+      display: flex; align-items: center; gap: 5px;
+    }
+    .sc-orig { font-size: 0.62rem; color: #aaa; text-decoration: line-through; }
+    .sc-curr { font-size: 0.75rem; font-weight: 800; color: var(--p1); }
+    .sc-body { padding: 14px 16px; }
+    .sc-nm {
+      font-size: 0.95rem; font-weight: 800; color: var(--text);
+      margin-bottom: 10px; line-height: 1.35;
+    }
+    .sc-validity {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.78rem; color: var(--text2); margin-bottom: 14px;
+    }
+    .sc-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .btn-explore, .btn-enroll {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 9px 0; border-radius: var(--r);
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: all 0.18s; text-decoration: none;
+    }
+    .btn-explore { background: transparent; border: 1px solid var(--border2); color: var(--text2); }
+    .btn-explore:hover { border-color: var(--p1); color: var(--p1); }
+    .btn-enroll { background: var(--p1); border: none; font-weight: 700; color: #050804; }
+    .btn-enroll:hover { background: #00ffb3; }
+    .empty-st { text-align: center; padding: 60px 20px; color: var(--text3); grid-column: 1/-1; }
+    .empty-st-ic { font-size: 3.5rem; opacity: 0.12; margin-bottom: 12px; }
+    .empty-st-tx { font-size: 0.9rem; }
+
+    @media (max-width: 700px) {
+      #topbar { padding: 0 14px; gap: 10px; }
+      .search-wrap { display: none; }
+      .help-banner, .alert-banner { flex-direction: column; align-items: flex-start; gap: 12px; }
+      #subjectsGrid { grid-template-columns: 1fr; }
+      .dash-wrap { padding: 80px 14px 40px; }
+    }
+    @media (min-width: 701px) and (max-width: 900px) {
+      #subjectsGrid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="logo">
+    <div class="logo-box">
+      <div class="logo-lines">
+        <span class="logo-l1">Toppers</span>
+        <span class="logo-l2">Way</span>
+      </div>
+      <span class="logo-chevron">▶▶</span>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <span class="search-icon">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </span>
+    <input type="text" id="searchInput" placeholder="What are you looking for..."/>
+  </div>
+</div>
+
+<div class="dash-wrap">
+  <!-- Help Banner -->
+  <div class="help-banner">
+    <div class="hb-left">
+      <span class="hb-icon">🧑‍💻</span>
+      <div>
+        <div class="hb-title">Struggling in Studies?</div>
+        <div class="hb-sub">Aaiye apki Samasya ka, Samadan krte hai ✨</div>
+      </div>
+    </div>
+    <a class="hb-btn" href="#">See How We Help →</a>
+  </div>
+
+  <!-- Alert Banner with both channels -->
+  <div class="alert-banner">
+    <div class="ab-left">
+      <span class="ab-icon">⚠️</span>
+      <div>
+        <div class="ab-title">⚠️ Important: Site May Be Unavailable Anytime</div>
+        <div class="ab-sub">Bookmark this page and stay updated via our channels.</div>
+      </div>
+    </div>
+    <div class="ab-btns">
+      <a class="ab-btn primary" href="#" id="mainChannelBtn">✈ Main Channel</a>
+      <a class="ab-btn outline" href="#" id="backupChannelBtn">✈ Backup Channel</a>
+    </div>
+  </div>
+
+  <div class="courses-section">
+    <div class="cs-head">
+      <span class="cs-icon">📖</span>
+      <span class="cs-title">Our Courses</span>
+    </div>
+    <div id="subjectsGrid"></div>
+  </div>
+</div>
+
+<script>
+  const batches = [
+    { 
+      id: "aarambh-class10", 
+      name: "Aarambh Class 10th", 
+      chapters: 18, 
+      image: "https://dylnd2lqy6eys.cloudfront.net/1770981347/admin_v2/uploads/courses/thumbnail/4628574_125_aarambh%20banner%20app%202026%202.jpg",
+      priceOrig: 3999, 
+      priceCurr: 0,
+      page: "index.html"
+    },
+    { 
+      id: "aarambh2-class9", 
+      name: "Aarambh 2.0 Class 9th", 
+      chapters: 16, 
+      image: "https://i.ibb.co/7x90ymC3/6571450-125-aarambh-2027-class-9th-banner-app.png",
+      priceOrig: 3499, 
+      priceCurr: 0,
+      page: "index.html"
+    },
+    { 
+      id: "udaan", 
+      name: "Udaan", 
+      chapters: 14, 
+      image: "https://i.ibb.co/KjXx8KYm/3ea3e9c8-adf8-415a-add2-5ce7d67cbaf6.png",
+      priceOrig: 2999, 
+      priceCurr: 0,
+      page: "udaan.html"
+    },
+    { 
+      id: "neev", 
+      name: "Neev", 
+      chapters: 12, 
+      image: "https://i.ibb.co/fGHjfH7x/aaf06ac4-c4e5-4b2c-a416-2c1253ba23d0.jpg",
+      priceOrig: 2499, 
+      priceCurr: 0,
+      page: "neev.html"
+    }
+  ];
+
+  function renderBatches(filterText = "") {
+    const grid = document.getElementById("subjectsGrid");
+    const filtered = batches.filter(b => b.name.toLowerCase().includes(filterText.toLowerCase()));
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div class="empty-st"><div class="empty-st-ic">🔍</div><div class="empty-st-tx">No matching course found.</div></div>`;
+      return;
+    }
+    grid.innerHTML = filtered.map((batch, idx) => `
+      <div class="scard" data-id="${batch.id}" style="animation-delay: ${idx * 0.06}s">
+        <div class="sc-thumb">
+          <img src="${batch.image}" alt="${batch.name}">
+          <div class="sc-trending">🔥 Trending</div>
+          <div class="sc-price">
+            <span class="sc-orig">₹${batch.priceOrig}/-</span>
+            <span class="sc-curr">₹${batch.priceCurr}/-</span>
+          </div>
+        </div>
+        <div class="sc-body">
+          <div class="sc-nm">${batch.name}</div>
+          <div class="sc-validity">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Validity: ${batch.chapters * 30} days
+          </div>
+          <div class="sc-actions">
+            <button class="btn-explore">📖 Explore</button>
+            <button class="btn-enroll">🎓 Enroll Now</button>
+          </div>
+        </div>
+      </div>
+    `).join("");
+
+    document.querySelectorAll(".scard").forEach(card => {
+      const batchId = card.getAttribute("data-id");
+      const exploreBtn = card.querySelector(".btn-explore");
+      const enrollBtn = card.querySelector(".btn-enroll");
+      const batch = batches.find(b => b.id === batchId);
+      const openPage = () => { window.location.href = batch ? batch.page : `index.html?id=${batchId}`; };
+      card.addEventListener("click", openPage);
+      exploreBtn.addEventListener("click", e => { e.stopPropagation(); openPage(); });
+      enrollBtn.addEventListener("click", e => { e.stopPropagation(); openPage(); });
+    });
+  }
+
+  document.getElementById("searchInput").addEventListener("input", e => {
+    renderBatches(e.target.value.trim());
+  });
+
+  document.getElementById("mainChannelBtn").addEventListener("click", e => {
+    e.preventDefault(); window.open("https://t.me/yourmainchannel", "_blank");
+  });
+  document.getElementById("backupChannelBtn").addEventListener("click", e => {
+    e.preventDefault(); window.open("https://t.me/yourbackupchannel", "_blank");
+  });
+
+  renderBatches();
+
+ // --- Protection Code ---
+  // Disable right click
+  document.addEventListener("contextmenu", e => e.preventDefault());
+  // Disable text selection
+  document.addEventListener("selectstart", e => e.preventDefault());
+  // Disable dragging
+  document.addEventListener("dragstart", e => e.preventDefault());
+  // Block keys (F12, Ctrl+Shift+I/J/C/U)
+  document.addEventListener("keydown", e => {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) ||
+      (e.ctrlKey && e.key.toUpperCase() === "U")
+    ) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
+</script>
+</body>
+</html>
