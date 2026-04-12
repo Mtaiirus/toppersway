@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>ToppersWay — Class 10th</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-font-smoothing:antialiased;}
+:root{
+  --bg:#0d0f14;
+  --bg2:#111318;
+  --surface:#181b22;
+  --surface2:#1e2230;
+  --card:#181b22;
+  --border:#272b38;
+  --border2:#333848;
+  --mint:#00e5a0;
+  --mint2:#00c988;
+  --mint-glow:rgba(0,229,160,0.15);
+  --mint-dim:rgba(0,229,160,0.08);
+  --red:#ff5c5c;
+  --red-dim:rgba(255,92,92,0.08);
+  --orange:#ffaa44;
+  --text:#edf0f7;
+  --text2:#8b93a9;
+  --text3:#4a5168;
+  --r:8px;--r-lg:12px;--r-xl:16px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.6;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,229,160,0.5);}50%{box-shadow:0 0 0 5px rgba(0,229,160,0);}}
+@keyframes redpulse{0%,100%{box-shadow:0 0 0 0 rgba(255,92,92,0.5);}50%{box-shadow:0 0 0 5px rgba(255,92,92,0);}}
+
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s,visibility .5s;}
+#loader.hide{opacity:0;visibility:hidden;pointer-events:none;}
+.ld-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;letter-spacing:-.03em;color:var(--mint);}
+.ld-logo span{color:var(--text);}
+.ld-bar{width:160px;height:2px;background:rgba(0,229,160,0.12);border-radius:2px;overflow:hidden;}
+.ld-fill{height:100%;width:0;background:var(--mint);animation:ldfill 1.3s ease forwards;}
+@keyframes ldfill{to{width:100%;}}
+.ld-hint{font-size:.7rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(14px) scale(.97);z-index:9998;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);padding:12px 18px;font-size:.82rem;color:var(--text);box-shadow:0 16px 48px rgba(0,0,0,0.6);opacity:0;transition:all .3s cubic-bezier(.16,1,.3,1);pointer-events:none;display:flex;align-items:center;gap:9px;max-width:320px;}
+#toast.show{transform:translateX(-50%) translateY(0) scale(1);opacity:1;}
+.tdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;background:var(--mint);}
+#toast.error .tdot{background:var(--red);}
+
+/* ── TOPBAR ── */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:500;height:62px;display:flex;align-items:center;padding:0 24px;gap:16px;background:rgba(13,15,20,0.9);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border-bottom:1px solid var(--border);}
+.logo-box{display:inline-flex;align-items:center;gap:9px;background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:7px 13px;cursor:pointer;box-shadow:0 0 22px var(--mint-glow);}
+.logo-lines{display:flex;flex-direction:column;line-height:1.15;}
+.logo-l1,.logo-l2{font-family:'Syne',sans-serif;font-weight:800;font-size:.76rem;color:var(--text);}
+.logo-chevron{font-size:.7rem;color:var(--mint);letter-spacing:-3px;}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+#supportBtn{display:flex;align-items:center;gap:7px;background:rgba(0,229,160,0.08);border:1px solid rgba(0,229,160,0.2);color:var(--mint);padding:8px 15px;border-radius:var(--r);cursor:pointer;font-size:.78rem;font-weight:600;text-decoration:none;transition:all .22s;}
+#supportBtn:hover{background:rgba(0,229,160,0.16);border-color:rgba(0,229,160,0.4);transform:translateY(-1px);}
+.tg-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:pulse 2s infinite;flex-shrink:0;}
+
+/* ── TAB BAR ── */
+#tabBar{position:fixed;top:62px;left:0;right:0;z-index:400;height:48px;display:flex;align-items:center;padding:0 24px;gap:4px;background:rgba(13,15,20,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.tab{display:flex;align-items:center;gap:7px;padding:7px 16px;border-radius:var(--r);font-size:.83rem;font-weight:600;color:var(--text2);cursor:pointer;transition:all .2s;border:1px solid transparent;white-space:nowrap;}
+.tab:hover{color:var(--text);background:var(--surface);}
+.tab.active{color:var(--mint);background:var(--mint-dim);border-color:rgba(0,229,160,0.18);}
+.tab svg{flex-shrink:0;}
+.tab-badge{background:var(--red);color:#fff;font-size:.58rem;font-weight:800;padding:2px 6px;border-radius:20px;animation:redpulse 2s infinite;}
+
+/* ── PANES ── */
+.pane{display:none;position:relative;z-index:1;}
+.pane.active{display:flex;}
+
+/* ── DASHBOARD PANE ── */
+#dashPane{min-height:calc(100vh - 110px);margin-top:110px;}
+.sidebar{width:240px;flex-shrink:0;position:sticky;top:110px;height:calc(100vh - 110px);background:var(--surface);border-right:1px solid var(--border);padding:18px 10px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+.sb-section-label{font-size:.65rem;font-weight:700;color:var(--text3);letter-spacing:.13em;text-transform:uppercase;padding:10px 10px 6px;}
+/* Sidebar list items */
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--r);cursor:pointer;transition:all .17s;color:var(--text2);font-size:.83rem;font-weight:500;border:1px solid transparent;text-decoration:none;}
+.sb-item:hover{background:var(--surface2);color:var(--text);border-color:var(--border);}
+.sb-item.active{background:var(--mint-dim);border-color:rgba(0,229,160,0.2);color:var(--mint);}
+.sb-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);flex-shrink:0;}
+.sb-item.active .sb-dot{background:var(--mint);}
+.sb-em{font-size:.95rem;width:20px;text-align:center;flex-shrink:0;}
+.sb-thumb{width:22px;height:22px;border-radius:5px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);}
+.sb-nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sb-ct{background:var(--mint-dim);color:var(--mint);font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:20px;border:1px solid rgba(0,229,160,0.18);}
+.sb-divider{height:1px;background:var(--border);margin:8px 0;}
+.sb-bottom{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);}
+.sb-support{display:flex;align-items:center;gap:9px;padding:10px 12px;border-radius:var(--r);background:var(--mint-dim);border:1px solid rgba(0,229,160,0.18);text-decoration:none;transition:all .2s;}
+.sb-support:hover{background:rgba(0,229,160,0.14);border-color:rgba(0,229,160,0.35);}
+.sb-support-tx{font-size:.78rem;font-weight:600;color:var(--mint);}
+.sb-support-sub{font-size:.62rem;color:var(--text3);}
+
+/* ── MAIN CONTENT ── */
+.main{flex:1;min-width:0;padding:28px 30px;overflow-y:auto;}
+
+/* Welcome banner */
+.wbanner{background:linear-gradient(135deg,rgba(0,229,160,0.09),rgba(0,229,160,0.03));border:1px solid rgba(0,229,160,0.16);border-radius:var(--r-xl);padding:24px 28px;margin-bottom:26px;position:relative;overflow:hidden;animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;}
+.wbanner::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--mint),transparent);}
+.wbanner::after{content:'🎓';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:3rem;opacity:.08;}
+.wb-greet{font-size:.68rem;font-weight:700;color:var(--mint);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.wb-name{font-family:'Syne',sans-serif;font-size:1.55rem;font-weight:800;letter-spacing:-.02em;margin-bottom:3px;}
+.wb-sub{font-size:.83rem;color:var(--text2);}
+
+/* Section head */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sec-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;display:flex;align-items:center;gap:9px;}
+.sec-title-bar{width:3px;height:16px;background:var(--mint);border-radius:2px;flex-shrink:0;}
+.sec-badge{font-size:.7rem;color:var(--text3);background:var(--surface2);border:1px solid var(--border);padding:3px 10px;border-radius:20px;}
+
+/* ── LIVE SECTION ── */
+.live-dash-section{margin-bottom:30px;animation:fadeUp .4s cubic-bezier(.16,1,.3,1) .05s both;}
+.live-dot{width:9px;height:9px;border-radius:50%;background:var(--red);animation:redpulse 2s infinite;flex-shrink:0;}
+.live-count-badge{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,92,92,0.25);padding:4px 12px;border-radius:20px;font-size:.68rem;font-weight:700;}
+.live-dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+.live-dash-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);padding:18px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden;}
+.live-dash-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--red),var(--mint));}
+.live-dash-card:hover{border-color:rgba(255,92,92,0.3);transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,0.5);}
+.live-status-indicator{display:flex;align-items:center;gap:8px;margin-bottom:11px;}
+.live-badge{font-size:.62rem;font-weight:800;padding:3px 10px;border-radius:30px;background:var(--red);color:#fff;letter-spacing:.5px;text-transform:uppercase;}
+.live-badge.upcoming{background:var(--orange);color:#1a0d00;}
+.live-badge.ended{background:var(--text3);color:var(--text2);}
+.live-dash-subject{font-size:.73rem;color:var(--text2);margin-bottom:5px;display:flex;align-items:center;gap:5px;}
+.live-dash-class-title{font-family:'Syne',sans-serif;font-size:1.02rem;font-weight:800;margin-bottom:7px;line-height:1.3;}
+.live-dash-teacher{font-size:.78rem;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+.live-dash-time{display:flex;align-items:center;gap:12px;margin-bottom:14px;font-size:.77rem;color:var(--text2);flex-wrap:wrap;}
+.live-countdown-timer{color:var(--mint);font-weight:700;}
+.live-join-btn{background:var(--red);color:#fff;padding:8px 18px;border-radius:var(--r);font-size:.78rem;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;border:none;cursor:pointer;}
+.live-join-btn:hover{transform:scale(1.03);box-shadow:0 6px 18px rgba(255,92,92,0.35);}
+.live-join-btn.disabled{opacity:0.45;pointer-events:none;background:var(--surface2);color:var(--text3);}
+.empty-live-dash{grid-column:1/-1;text-align:center;padding:40px 20px;color:var(--text3);background:var(--mint-dim);border:1px dashed rgba(0,229,160,0.15);border-radius:var(--r-xl);}
+
+/* ── NOTES BUTTON ── */
+.notes-main-btn{display:flex;align-items:center;justify-content:center;gap:14px;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r-xl);padding:15px 24px;margin-bottom:28px;cursor:pointer;transition:all .25s;text-decoration:none;}
+.notes-main-btn:hover{background:var(--mint-dim);border-color:rgba(0,229,160,0.28);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.4);}
+.notes-main-btn span:first-child{font-size:1.5rem;}
+.btn-text{font-family:'Syne',sans-serif;font-weight:800;font-size:.96rem;color:var(--text);}
+.btn-sub{font-size:.71rem;color:var(--text2);margin-top:1px;}
+
+/* ── SUBJECT CARDS ── */
+#subjectsGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);cursor:pointer;transition:all .22s;position:relative;overflow:hidden;animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;display:flex;flex-direction:column;}
+.scard:hover{border-color:rgba(0,229,160,0.28);transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,0.55),0 0 0 1px rgba(0,229,160,0.12);}
+.sc-thumb-wrap{width:100%;height:126px;overflow:hidden;position:relative;flex-shrink:0;}
+.sc-thumb-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;}
+.scard:hover .sc-thumb-wrap img{transform:scale(1.05);}
+.sc-thumb-fallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2.2rem;}
+.sc-body{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column;}
+.sc-nm{font-family:'Syne',sans-serif;font-size:.92rem;font-weight:800;margin-bottom:4px;color:var(--text);}
+.sc-mt{font-size:.72rem;color:var(--text3);}
+.sc-ft{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--border);}
+.sc-cta{font-size:.71rem;font-weight:600;color:var(--mint);}
+.sc-arr{color:var(--mint);font-size:.8rem;transition:transform .2s;}
+.scard:hover .sc-arr{transform:translateX(4px);}
+.empty-st{text-align:center;padding:56px 20px;color:var(--text3);grid-column:1/-1;}
+.empty-st-ic{font-size:3rem;opacity:.18;margin-bottom:10px;}
+.empty-st-tx{font-size:.87rem;}
+
+/* Color fallbacks for subject icons */
+.ci0{background:linear-gradient(135deg,#0d1f1a,#0a1a15);}
+.ci1{background:linear-gradient(135deg,#0a1520,#091218);}
+.ci2{background:linear-gradient(135deg,#0f1a0f,#0a140a);}
+.ci3{background:linear-gradient(135deg,#1a160a,#14110a);}
+.ci4{background:linear-gradient(135deg,#1a0d15,#140a10);}
+.ci5{background:linear-gradient(135deg,#12101a,#0e0c16);}
+.ci6{background:linear-gradient(135deg,#1a0d0d,#140a0a);}
+.ci7{background:linear-gradient(135deg,#0a181a,#081315);}
+
+/* ── SUBJECT PANE ── */
+#subjectPane{min-height:calc(100vh - 110px);margin-top:110px;}
+.sp-sidebar{width:250px;flex-shrink:0;position:sticky;top:110px;height:calc(100vh - 110px);background:var(--surface);border-right:1px solid var(--border);padding:18px 10px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+.sp-back{display:flex;align-items:center;gap:7px;padding:9px 11px;border-radius:var(--r);color:var(--text2);font-size:.81rem;font-weight:600;cursor:pointer;transition:all .2s;border:1px solid transparent;margin-bottom:12px;}
+.sp-back:hover{background:var(--surface2);border-color:var(--border);color:var(--text);}
+.sp-stitle{font-family:'Syne',sans-serif;font-size:.88rem;font-weight:800;color:var(--text);padding:0 11px 12px;border-bottom:1px solid var(--border);margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* Chapter nav list */
+.cn-item{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:var(--r);cursor:pointer;transition:all .17s;color:var(--text2);font-size:.8rem;border:1px solid transparent;}
+.cn-item:hover{background:var(--surface2);color:var(--text);}
+.cn-item.active{background:var(--mint-dim);border-color:rgba(0,229,160,0.18);color:var(--mint);}
+.cn-thumb{width:26px;height:26px;border-radius:6px;object-fit:cover;flex-shrink:0;border:1px solid var(--border);}
+.cn-n{width:26px;height:26px;border-radius:6px;flex-shrink:0;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:var(--text3);}
+.cn-item.active .cn-n{background:var(--mint);border-color:var(--mint);color:#050e09;}
+.sp-main{flex:1;min-width:0;padding:26px 28px;overflow-y:auto;}
+
+/* Subject hero */
+.sp-hero{background:linear-gradient(135deg,rgba(0,229,160,0.08),rgba(0,229,160,0.02));border:1px solid rgba(0,229,160,0.14);border-radius:var(--r-xl);margin-bottom:22px;position:relative;overflow:hidden;animation:fadeUp .35s cubic-bezier(.16,1,.3,1) both;}
+.sp-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--mint),transparent);}
+.sp-hero-thumb{width:100%;height:150px;object-fit:cover;display:block;}
+.sp-hero-info{padding:20px 24px;}
+.sp-lbl{font-size:.66rem;font-weight:700;color:var(--mint);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.sp-h1{font-family:'Syne',sans-serif;font-size:1.45rem;font-weight:800;letter-spacing:-.02em;margin-bottom:4px;}
+.sp-mt{font-size:.82rem;color:var(--text2);}
+
+/* Chapter blocks */
+.chs{display:flex;flex-direction:column;gap:10px;}
+.cblock{background:var(--card);border:1px solid var(--border);border-radius:var(--r-xl);overflow:hidden;transition:border-color .2s;animation:fadeUp .35s cubic-bezier(.16,1,.3,1) both;}
+.cblock:hover{border-color:var(--border2);}
+.cblock.open{border-color:rgba(0,229,160,0.2);}
+.ctog{display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .18s;flex-direction:column;}
+.ctog:hover{background:rgba(0,229,160,0.03);}
+.c-thumb-strip{width:100%;height:76px;object-fit:cover;display:block;border-bottom:1px solid var(--border);}
+.ctog-inner{display:flex;align-items:center;justify-content:space-between;width:100%;padding:13px 16px;}
+.ctl{display:flex;align-items:center;gap:12px;}
+.ct-n{width:34px;height:34px;border-radius:9px;flex-shrink:0;background:var(--mint-dim);border:1px solid rgba(0,229,160,0.2);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:.76rem;font-weight:800;color:var(--mint);}
+.cblock.open .ct-n{background:var(--mint);color:#050e09;border-color:var(--mint);}
+.ct-nm{font-family:'Syne',sans-serif;font-size:.86rem;font-weight:800;margin-bottom:2px;color:var(--text);}
+.ct-mt{font-size:.68rem;color:var(--text3);}
+.ct-chev{width:26px;height:26px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.72rem;transition:all .22s;flex-shrink:0;}
+.cblock.open .ct-chev{background:var(--mint-dim);border-color:rgba(0,229,160,0.2);color:var(--mint);transform:rotate(90deg);}
+.vpanel{display:none;border-top:1px solid var(--border);padding:10px 14px 14px;flex-direction:column;gap:5px;}
+.cblock.open .vpanel{display:flex;}
+
+/* Video rows */
+.vrow{display:flex;align-items:center;gap:10px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--text);transition:all .2s;overflow:hidden;}
+.vrow:hover{background:var(--mint-dim);border-color:rgba(0,229,160,0.22);transform:translateX(3px);}
+.vr-thumb{width:70px;height:48px;object-fit:cover;flex-shrink:0;}
+.vr-thumb-fallback{width:48px;height:48px;flex-shrink:0;background:var(--mint-dim);border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--mint);}
+.vr-body{flex:1;padding:9px 4px 9px 0;min-width:0;}
+.vr-nm{font-size:.82rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vr-ic{font-size:.72rem;color:var(--text3);transition:color .2s;padding-right:12px;flex-shrink:0;}
+.vrow:hover .vr-ic{color:var(--mint);}
+
+/* ── PLAYER PANE ── */
+#playerPane{min-height:calc(100vh - 110px);margin-top:110px;flex-direction:column;}
+.player-topbar{display:flex;align-items:center;gap:12px;padding:14px 22px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;}
+.player-back{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:var(--r);color:var(--text2);font-size:.79rem;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--surface2);transition:all .2s;white-space:nowrap;flex-shrink:0;}
+.player-back:hover{color:var(--mint);border-color:rgba(0,229,160,0.3);}
+.player-breadcrumb{font-size:.77rem;color:var(--text3);display:flex;align-items:center;gap:5px;overflow:hidden;min-width:0;}
+.player-breadcrumb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2);}
+.player-breadcrumb span.cur{color:var(--text);font-weight:600;}
+.player-body{display:flex;flex:1;min-height:0;overflow:hidden;}
+.player-main{flex:1;min-width:0;display:flex;flex-direction:column;overflow-y:auto;}
+.yt-wrap{position:relative;width:100%;background:#000;padding-top:56.25%;}
+.yt-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.video-info{padding:18px 24px;border-bottom:1px solid var(--border);}
+.video-title{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;letter-spacing:-.01em;margin-bottom:7px;}
+.video-meta{font-size:.76rem;color:var(--text3);display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.ext-link-wrap{padding:22px 24px;}
+.ext-link{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;background:var(--mint-dim);border:1px solid rgba(0,229,160,0.2);border-radius:var(--r);color:var(--mint);font-size:.83rem;font-weight:600;text-decoration:none;transition:all .2s;}
+.ext-link:hover{background:rgba(0,229,160,0.14);}
+/* Playlist panel */
+.playlist-panel{width:290px;flex-shrink:0;border-left:1px solid var(--border);background:var(--surface);display:flex;flex-direction:column;overflow:hidden;}
+.pl-head{padding:14px 14px 11px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.pl-title{font-family:'Syne',sans-serif;font-size:.86rem;font-weight:800;margin-bottom:3px;}
+.pl-sub{font-size:.68rem;color:var(--text3);}
+.pl-list{flex:1;overflow-y:auto;padding:6px;display:flex;flex-direction:column;gap:3px;}
+.pl-item{display:flex;align-items:center;gap:0;border-radius:var(--r);cursor:pointer;transition:all .17s;border:1px solid transparent;color:var(--text2);overflow:hidden;}
+.pl-item:hover{background:var(--surface2);color:var(--text);border-color:var(--border);}
+.pl-item.active{background:var(--mint-dim);border-color:rgba(0,229,160,0.2);color:var(--text);}
+.pl-thumb{width:54px;height:38px;object-fit:cover;flex-shrink:0;}
+.pl-thumb-fallback{width:38px;height:38px;background:var(--mint-dim);display:flex;align-items:center;justify-content:center;font-size:.62rem;flex-shrink:0;color:var(--mint);}
+.pl-item-body{flex:1;padding:0 10px;min-width:0;}
+.pl-item-nm{font-size:.78rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pl-item-num{font-size:.62rem;color:var(--text3);}
+.pl-item.active .pl-item-num{color:var(--mint);}
+.pl-play-ic{font-size:.62rem;color:var(--mint);padding-right:10px;flex-shrink:0;opacity:0;}
+.pl-item.active .pl-play-ic{opacity:1;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .sidebar,.sp-sidebar,.playlist-panel{display:none;}
+  .main,.sp-main{padding:18px 16px;}
+  #subjectsGrid{grid-template-columns:1fr 1fr;}
+  .live-dash-grid{grid-template-columns:1fr;}
+  #topbar{padding:0 16px;}
+  #tabBar{padding:0 12px;gap:2px;}
+  .tab span.tab-label{display:none;}
+  .tab{padding:7px 12px;}
+  .player-topbar{padding:10px 14px;}
+  .video-info{padding:12px 16px;}
+}
+@media(max-width:480px){
+  #subjectsGrid{grid-template-columns:1fr;}
+  .tab-label{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="ld-logo">Toppers<span>Way</span></div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+  <div class="ld-hint">Preparing your workspace</div>
+</div>
+<div id="toast"><div class="tdot"></div><span id="tmsg"></span></div>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="logo-box" id="logoHome">
+    <div class="logo-lines">
+      <span class="logo-l1">Toppers</span>
+      <span class="logo-l2">Way</span>
+    </div>
+    <span class="logo-chevron">▶▶</span>
+  </div>
+  <div class="tb-right">
+    <a id="supportBtn" href="https://t.me/RUNWAYxBKLNETWORK" target="_blank" rel="noopener">
+      <div class="tg-dot"></div>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248l-2.018 9.502c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12L7.48 14.517l-2.95-.924c-.641-.204-.654-.641.136-.953l11.526-4.446c.534-.194 1.001.13.37.054z"/></svg>
+      <span>Support</span>
+    </a>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div id="tabBar">
+  <div class="tab active" data-tab="home" onclick="switchTab('home')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="tab-label">Home</span>
+  </div>
+  <div class="tab" data-tab="live" onclick="switchTab('live')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+    <span class="tab-label">Live</span>
+    <span class="tab-badge" id="liveTabBadge">0</span>
+  </div>
+  <div class="tab" data-tab="subjects" onclick="switchTab('subjects')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="tab-label">Subjects</span>
+    <span class="sec-badge" id="scBadge" style="margin-left:2px;">—</span>
+  </div>
+  <div class="tab" data-tab="notes" onclick="switchTab('notes')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    <span class="tab-label">Notes</span>
+  </div>
+</div>
+
+<!-- DASHBOARD PANE -->
+<div class="pane" id="dashPane">
+  <aside class="sidebar">
+    <div class="sb-section-label">Menu</div>
+    <div class="sb-item active" onclick="switchTab('home')">
+      <span class="sb-dot"></span><span class="sb-em">🏠</span><span class="sb-nm">Home</span>
+    </div>
+    <div class="sb-item" onclick="switchTab('live')">
+      <span class="sb-dot"></span><span class="sb-em">🔴</span><span class="sb-nm">Live Classes</span>
+    </div>
+    <a class="sb-item" href="https://allxnotes.lovable.app/udaan" target="_blank" rel="noopener" style="text-decoration:none;">
+      <span class="sb-dot"></span><span class="sb-em">📝</span><span class="sb-nm">My Notes</span>
+    </a>
+    <div class="sb-divider"></div>
+    <div class="sb-section-label">Subjects</div>
+    <div id="sbSubjects"></div>
+    <div class="sb-bottom">
+      <a class="sb-support" href="https://t.me/vibrunwayxbkl" target="_blank" rel="noopener">
+        <span style="font-size:.9rem">💬</span>
+        <div><div class="sb-support-tx">Telegram Support</div><div class="sb-support-sub">Join our community</div></div>
+      </a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <!-- Welcome -->
+    <div class="wbanner" id="homeTab">
+      <div class="wb-greet">Good to see you</div>
+      <div class="wb-name">Welcome to ToppersWay 👋</div>
+      <div class="wb-sub">Pick up where you left off or explore something new.</div>
+    </div>
+
+    <!-- TAB CONTENT: HOME -->
+    <div id="tabContent-home">
+      <!-- Live section preview -->
+      <div class="live-dash-section">
+        <div class="sec-head">
+          <div class="sec-title"><div class="live-dot"></div> Live &amp; Upcoming</div>
+          <span class="live-count-badge" id="liveCountBadge">0 live</span>
+        </div>
+        <div class="live-dash-grid" id="liveDashGrid">
+          <div class="empty-live-dash">Loading live classes…</div>
+        </div>
+      </div>
+
+      <!-- Notes button -->
+      <a href="https://allxnotes.lovable.app/11thnotes" target="_blank" rel="noopener" class="notes-main-btn">
+        <span>📝</span>
+        <div>
+          <div class="btn-text">Open Study Notes</div>
+          <div class="btn-sub">11th standard notes &amp; resources →</div>
+        </div>
+        <span style="margin-left:auto;font-size:1.1rem;">✨</span>
+      </a>
+
+      <!-- Subjects -->
+      <div class="sec-head">
+        <div class="sec-title"><div class="sec-title-bar"></div>All Subjects</div>
+        <span class="sec-badge" id="scBadge2">— subjects</span>
+      </div>
+      <div id="subjectsGrid">
+        <div class="empty-st"><div class="empty-st-ic">📚</div><div class="empty-st-tx">Loading subjects…</div></div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: LIVE -->
+    <div id="tabContent-live" style="display:none;">
+      <div class="sec-head">
+        <div class="sec-title"><div class="live-dot"></div> Live &amp; Upcoming Classes</div>
+        <span class="live-count-badge" id="liveCountBadge2">0 live</span>
+      </div>
+      <div class="live-dash-grid" id="liveDashGrid2">
+        <div class="empty-live-dash">Loading…</div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: SUBJECTS -->
+    <div id="tabContent-subjects" style="display:none;">
+      <div class="sec-head">
+        <div class="sec-title"><div class="sec-title-bar"></div>All Subjects</div>
+        <span class="sec-badge" id="scBadge3">— subjects</span>
+      </div>
+      <div id="subjectsGrid2">
+        <div class="empty-st"><div class="empty-st-ic">📚</div><div class="empty-st-tx">Loading subjects…</div></div>
+      </div>
+    </div>
+
+    <!-- TAB CONTENT: NOTES -->
+    <div id="tabContent-notes" style="display:none;">
+      <div style="animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both;">
+        <div class="sec-head">
+          <div class="sec-title"><div class="sec-title-bar"></div>Study Notes</div>
+        </div>
+        <a href="https://allxnotes.lovable.app/11thnotes" target="_blank" rel="noopener" class="notes-main-btn" style="margin-bottom:0;">
+          <span>📝</span>
+          <div>
+            <div class="btn-text">Open 11th Standard Notes</div>
+            <div class="btn-sub">Full notes &amp; resources portal →</div>
+          </div>
+          <span style="margin-left:auto;font-size:1.1rem;">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBJECT PANE -->
+<div class="pane" id="subjectPane">
+  <aside class="sp-sidebar">
+    <div class="sp-back" id="spBack">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Subjects
+    </div>
+    <div class="sp-stitle" id="spSbTitle">Subject</div>
+    <div id="chapNav"></div>
+  </aside>
+  <div class="sp-main">
+    <div class="sp-hero" id="spHero">
+      <div class="sp-hero-info">
+        <div class="sp-lbl">Currently studying</div>
+        <div class="sp-h1" id="subjectTitle">Subject</div>
+        <div class="sp-mt" id="subjectDesc">Chapters &amp; videos</div>
+      </div>
+    </div>
+    <div class="chs" id="chaptersList"></div>
+  </div>
+</div>
+
+<!-- PLAYER PANE -->
+<div class="pane" id="playerPane">
+  <div class="player-topbar">
+    <div class="player-back" id="playerBack">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      Back
+    </div>
+    <div class="player-breadcrumb">
+      <span id="bc-subject"></span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span id="bc-chapter"></span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span id="bc-video" class="cur"></span>
+    </div>
+  </div>
+  <div class="player-body">
+    <div class="player-main">
+      <div class="yt-wrap" id="ytWrap">
+        <iframe id="ytFrame" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+      </div>
+      <div class="video-info">
+        <div class="video-title" id="vidTitle"></div>
+        <div class="video-meta">
+          <span>📖 <span id="vidChapter"></span></span>
+          <span>🎓 <span id="vidSubjectMeta"></span></span>
+        </div>
+      </div>
+      <div class="ext-link-wrap" id="extLinkWrap" style="display:none">
+        <a class="ext-link" id="extLink" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Video Link
+        </a>
+      </div>
+    </div>
+    <div class="playlist-panel">
+      <div class="pl-head">
+        <div class="pl-title" id="plTitle">Playlist</div>
+        <div class="pl-sub" id="plSub">0 videos</div>
+      </div>
+      <div class="pl-list" id="plList"></div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCnwbLyO3NnOJnB0RzWLZytBS-SVnttHkM",
+  authDomain: "aarambh10th.firebaseapp.com",
+  databaseURL: "https://aarambh10th-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "aarambh10th",
+  storageBucket: "aarambh10th.firebasestorage.app",
+  messagingSenderId: "432412269808",
+  appId: "1:432412269808:web:e6f23c66e7595fd8d17635"
+};
+  
+const app = initializeApp(firebaseConfig);
+const db  = getDatabase(app);
+const $   = id => document.getElementById(id);
+const ICONS = ['📐','⚡','🧬','🌍','💻','🎯','🔭','🧪','🎨','🏛️','🧠','📊'];
+const COLS  = ['ci0','ci1','ci2','ci3','ci4','ci5','ci6','ci7'];
+
+let currentSubjectId = null;
+let chaptersUnsub = null;
+let activeTab = 'home';
+let cachedSubjects = null;
+let cachedLiveCards = [];
+
+/* TAB SWITCHER */
+window.switchTab = function(tab) {
+  activeTab = tab;
+  ['home','live','subjects','notes'].forEach(t => {
+    const el = document.getElementById('tabContent-' + t);
+    if (el) el.style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach(el => {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  // sync sidebar highlight
+  if (tab === 'home') document.querySelector('.sb-item')?.classList.add('active');
+
+  if (tab === 'live' && cachedLiveCards.length) {
+    const grid2 = $('liveDashGrid2');
+    grid2.innerHTML = '';
+    cachedLiveCards.forEach(c => grid2.appendChild(c.cloneNode(true)));
+    reattachLiveCardListeners(grid2);
+  }
+  if (tab === 'subjects' && cachedSubjects) renderSubjectsInto('subjectsGrid2', cachedSubjects);
+  if (tab === 'notes') {/* static content already rendered */}
+
+  // scroll to top
+  document.querySelector('.main')?.scrollTo(0, 0);
+};
+// Show welcome banner only on home tab
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    const wb = $('homeTab');
+    if (wb) wb.style.display = t.dataset.tab === 'home' ? '' : 'none';
+  });
+});
+
+/* PANE ROUTER */
+function showPane(id) {
+  ['dashPane','subjectPane','playerPane'].forEach(p => {
+    $(p).classList.remove('active'); $(p).style.display = 'none';
+  });
+  $(id).style.display = 'flex'; $(id).classList.add('active');
+  if (id === 'dashPane') {
+    document.getElementById('tabBar').style.display = 'flex';
+  } else {
+    document.getElementById('tabBar').style.display = 'none';
+  }
+}
+
+function toast(msg, type='error') {
+  $('tmsg').textContent = msg;
+  const t = $('toast'); t.className = 'show ' + type;
+  setTimeout(() => { t.className = ''; }, 3200);
+}
+
+/* YT HELPERS */
+function getYtId(url) {
+  if (!url) return null;
+  const m = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+function ytEmbed(id) { return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`; }
+function imgEl(src, cls, alt='') {
+  const i = document.createElement('img');
+  i.src = src; i.className = cls; i.alt = alt;
+  i.onerror = () => i.style.display = 'none';
+  return i;
+}
+
+/* LIVE CLASSES */
+function loadAllLiveClasses() {
+  onValue(ref(db, 'subjects'), (snap) => {
+    const subjects = snap.val();
+    const grid = $('liveDashGrid');
+    const grid2 = $('liveDashGrid2');
+    const badge = $('liveCountBadge');
+    const badge2 = $('liveCountBadge2');
+    const tabBadge = $('liveTabBadge');
+    grid.innerHTML = '';
+    cachedLiveCards = [];
+
+    if (!subjects) {
+      const msg = `<div class="empty-live-dash">No subjects found</div>`;
+      grid.innerHTML = msg; if (grid2) grid2.innerHTML = msg;
+      badge.textContent = '0 live'; if (badge2) badge2.textContent = '0 live';
+      tabBadge.textContent = '0';
+      return;
+    }
+
+    const allLive = [];
+    const now = new Date();
+    Object.entries(subjects).forEach(([sid, subj]) => {
+      if (subj.liveClasses) {
+        Object.entries(subj.liveClasses).forEach(([cid, cls]) => {
+          allLive.push({ id:cid, subjectId:sid, subjectName:subj.name||'Subject', subjectThumb:subj.thumbnail, ...cls });
+        });
+      }
+    });
+
+    const active = allLive.filter(c => c.status !== 'ended');
+    active.sort((a, b) => {
+      const ta = new Date(a.startTime), tb = new Date(b.startTime);
+      const aL = a.status==='live'||(ta<=now&&a.status!=='ended');
+      const bL = b.status==='live'||(tb<=now&&b.status!=='ended');
+      if (aL && !bL) return -1; if (!aL && bL) return 1;
+      return ta - tb;
+    });
+
+    const liveCount = active.filter(c => {
+      const t = new Date(c.startTime);
+      return c.status==='live'||(t<=now&&c.status!=='ended');
+    }).length;
+
+    badge.textContent = `${liveCount} live`;
+    if (badge2) badge2.textContent = `${liveCount} live`;
+    tabBadge.textContent = liveCount;
+
+    if (active.length === 0) {
+      const msg = `<div class="empty-live-dash"><div style="font-size:2rem;opacity:.3;margin-bottom:8px;">🔴</div><div>No live or upcoming classes</div><div style="font-size:.73rem;margin-top:6px;color:var(--text3)">Check back later</div></div>`;
+      grid.innerHTML = msg; if (grid2) grid2.innerHTML = msg;
+      return;
+    }
+
+    active.forEach(cls => {
+      const card = createLiveCard(cls);
+      grid.appendChild(card);
+      cachedLiveCards.push(card);
+    });
+
+    if (activeTab === 'live' && grid2) {
+      grid2.innerHTML = '';
+      cachedLiveCards.forEach(c => grid2.appendChild(c.cloneNode(true)));
+      reattachLiveCardListeners(grid2);
+    }
+  }, (err) => {
+    $('liveDashGrid').innerHTML = `<div class="empty-live-dash">⚠️ Failed to load</div>`;
+    console.error(err);
+  });
+}
+
+function reattachLiveCardListeners(container) {
+  container.querySelectorAll('.live-dash-card').forEach((card, i) => {
+    const cls = cachedLiveCards[i]?._cls;
+    if (!cls) return;
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.live-join-btn')) return;
+      onValue(ref(db, `subjects/${cls.subjectId}`), (snap) => {
+        const subj = snap.val();
+        if (subj) openSubject(cls.subjectId, subj, 0);
+      }, { onlyOnce:true });
+    });
+  });
+}
+
+function createLiveCard(cls) {
+  const card = document.createElement('div');
+  card.className = 'live-dash-card';
+  card._cls = cls;
+
+  const startTime = new Date(cls.startTime);
+  const now = new Date();
+  const isLive = cls.status==='live'||(startTime<=now&&cls.status!=='ended');
+  const isUpcoming = startTime > now;
+
+  const fDate = startTime.toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+  const fTime = startTime.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' });
+
+  let countdownHtml = '';
+  if (isUpcoming) {
+    const diff = startTime - now;
+    const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000);
+    countdownHtml = `<span class="live-countdown-timer">⏳ ${d}d ${h}h ${m}m</span>`;
+  }
+
+  card.innerHTML = `
+    <div class="live-status-indicator">
+      <span class="live-badge ${isLive?'':(isUpcoming?'upcoming':'ended')}">${isLive?'🔴 LIVE NOW':(isUpcoming?'UPCOMING':'ENDED')}</span>
+    </div>
+    <div class="live-dash-subject"><span>📚</span> ${cls.subjectName}</div>
+    <div class="live-dash-class-title">${cls.title||'Live Class'}</div>
+    ${cls.teacher?`<div class="live-dash-teacher"><span>👨‍🏫</span> ${cls.teacher}</div>`:''}
+    ${cls.description?`<div style="font-size:.78rem;color:var(--text2);margin-bottom:10px;">${cls.description}</div>`:''}
+    <div class="live-dash-time">
+      <span>📅 ${fDate}</span><span>🕒 ${fTime}</span>${countdownHtml}
+    </div>
+    <div style="display:flex;justify-content:flex-end;">
+      ${isLive
+        ? `<a class="live-join-btn" href="${cls.meetingUrl||'#'}" target="_blank" rel="noopener">▶ Join Live Class</a>`
+        : isUpcoming
+          ? `<span class="live-join-btn disabled">Starts Soon</span>`
+          : `<span class="live-join-btn disabled">Ended</span>`}
+    </div>`;
+
+  card.addEventListener('click', (e) => {
+    if (e.target.closest('.live-join-btn')) return;
+    onValue(ref(db, `subjects/${cls.subjectId}`), (snap) => {
+      const subj = snap.val();
+      if (subj) openSubject(cls.subjectId, subj, 0);
+    }, { onlyOnce:true });
+  });
+
+  if (isUpcoming) {
+    const iv = setInterval(() => {
+      const now2 = new Date(), diff2 = startTime - now2;
+      if (diff2 <= 0) { clearInterval(iv); loadAllLiveClasses(); return; }
+      const d=Math.floor(diff2/86400000), h=Math.floor((diff2%86400000)/3600000), m=Math.floor((diff2%3600000)/60000);
+      const s = card.querySelector('.live-countdown-timer');
+      if (s) s.textContent = `⏳ ${d}d ${h}h ${m}m`;
+    }, 60000);
+  }
+  return card;
+}
+
+/* LOAD SUBJECTS */
+function loadSubjects() {
+  onValue(ref(db,'subjects'), snap => {
+    const data = snap.val();
+    cachedSubjects = data;
+    const grid = $('subjectsGrid'), sb = $('sbSubjects');
+    grid.innerHTML = ''; sb.innerHTML = '';
+    if (!data) {
+      grid.innerHTML = `<div class="empty-st"><div class="empty-st-ic">📚</div><div class="empty-st-tx">No subjects yet.<br><small style="color:var(--red)">Set Firebase .read: true</small></div></div>`;
+      ['scBadge','scBadge2','scBadge3'].forEach(id => { const el=$(id); if(el) el.textContent='0 subjects'; });
+      return;
+    }
+    const ents = Object.entries(data);
+    const label = `${ents.length} subject${ents.length!==1?'s':''}`;
+    ['scBadge','scBadge2','scBadge3'].forEach(id => { const el=$(id); if(el) el.textContent=label; });
+
+    renderSubjectsInto('subjectsGrid', data);
+
+    ents.forEach(([sid, subj], i) => {
+      const cc = subj.chapters ? Object.keys(subj.chapters).length : 0;
+      const ico = ICONS[i%ICONS.length];
+      const si = document.createElement('div');
+      si.className = 'sb-item'; si.id = 'sbi-' + sid;
+      const siThumb = subj.thumbnail
+        ? `<img class="sb-thumb" src="${subj.thumbnail}" alt=""/>`
+        : `<span class="sb-em">${ico}</span>`;
+      si.innerHTML = `<span class="sb-dot"></span>${siThumb}<span class="sb-nm">${subj.name||'Untitled'}</span><span class="sb-ct">${cc}</span>`;
+      si.onclick = () => openSubject(sid, subj, i);
+      sb.appendChild(si);
+    });
+  }, () => {
+    $('subjectsGrid').innerHTML = `<div class="empty-st"><div class="empty-st-ic">⚠️</div><div class="empty-st-tx">Firebase read blocked.<br>Set .read: true in Rules.</div></div>`;
+    toast('Firebase permission denied — update rules');
+  });
+}
+
+function renderSubjectsInto(gridId, data) {
+  const grid = $(gridId);
+  if (!grid || !data) return;
+  grid.innerHTML = '';
+  Object.entries(data).forEach(([sid, subj], i) => {
+    const cc = subj.chapters ? Object.keys(subj.chapters).length : 0;
+    const col = COLS[i%COLS.length], ico = ICONS[i%ICONS.length];
+    const card = document.createElement('div');
+    card.className = 'scard'; card.style.animationDelay = (i*.06)+'s';
+    const thumbWrap = document.createElement('div');
+    thumbWrap.className = 'sc-thumb-wrap';
+    if (subj.thumbnail) {
+      const img = imgEl(subj.thumbnail,'','');
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;transition:transform .3s;display:block;';
+      thumbWrap.appendChild(img);
+      card.addEventListener('mouseover', () => img.style.transform='scale(1.05)');
+      card.addEventListener('mouseout',  () => img.style.transform='');
+    } else {
+      thumbWrap.innerHTML = `<div class="sc-thumb-fallback ${col}">${ico}</div>`;
+    }
+    const body = document.createElement('div'); body.className='sc-body';
+    body.innerHTML = `<div class="sc-nm">${subj.name||'Untitled'}</div><div class="sc-mt">${cc} chapter${cc!==1?'s':''}</div><div class="sc-ft"><span class="sc-cta">Start Learning</span><span class="sc-arr">→</span></div>`;
+    card.appendChild(thumbWrap); card.appendChild(body);
+    card.onclick = () => openSubject(sid, subj, i);
+    grid.appendChild(card);
+  });
+}
+
+/* OPEN SUBJECT */
+function openSubject(sid, subj, idx) {
+  if (chaptersUnsub) { chaptersUnsub(); chaptersUnsub = null; }
+  currentSubjectId = sid;
+  showPane('subjectPane');
+  $('subjectTitle').textContent = $('spSbTitle').textContent = subj.name||'Subject';
+  const hero = $('spHero');
+  const existImg = hero.querySelector('.sp-hero-thumb');
+  if (existImg) existImg.remove();
+  if (subj.thumbnail) {
+    const img = document.createElement('img');
+    img.className='sp-hero-thumb'; img.src=subj.thumbnail; img.alt='';
+    hero.insertBefore(img, hero.firstChild);
+  }
+  chaptersUnsub = onValue(ref(db,`subjects/${sid}/chapters`), snap => {
+    const data = snap.val(), list=$('chaptersList'), nav=$('chapNav');
+    list.innerHTML=''; nav.innerHTML='';
+    const cc = data ? Object.keys(data).length : 0;
+    $('subjectDesc').textContent = `${cc} chapter${cc!==1?'s':''} · ${ICONS[idx%ICONS.length]} ${subj.name}`;
+    if (!data) { list.innerHTML=`<div class="empty-st"><div class="empty-st-ic">📖</div><div class="empty-st-tx">No chapters added yet.</div></div>`; return; }
+    let ci = 1;
+    Object.entries(data).forEach(([cid, chap]) => {
+      const vids = chap.videos ? Object.values(chap.videos) : [];
+      const ni = document.createElement('div'); ni.className='cn-item';
+      const niThumb = chap.thumbnail
+        ? `<img class="cn-thumb" src="${chap.thumbnail}" alt=""/>`
+        : `<div class="cn-n">${String(ci).padStart(2,'0')}</div>`;
+      ni.innerHTML = `${niThumb}<span>${chap.name||'Chapter'}</span>`;
+      ni.onclick = () => $('cb-'+cid)?.scrollIntoView({behavior:'smooth',block:'start'});
+      nav.appendChild(ni);
+
+      const block = document.createElement('div');
+      block.className='cblock'; block.id='cb-'+cid; block.style.animationDelay=(ci*.05)+'s';
+      const thumbStrip = chap.thumbnail ? `<img class="c-thumb-strip" src="${chap.thumbnail}" alt=""/>` : '';
+      block.innerHTML = `
+        <div class="ctog">
+          ${thumbStrip}
+          <div class="ctog-inner">
+            <div class="ctl">
+              <div class="ct-n">${String(ci).padStart(2,'0')}</div>
+              <div><div class="ct-nm">${chap.name||'Chapter'}</div><div class="ct-mt">${vids.length} video${vids.length!==1?'s':''}</div></div>
+            </div>
+            <div class="ct-chev">›</div>
+          </div>
+        </div>
+        <div class="vpanel" id="vp-${cid}"></div>`;
+      block.querySelector('.ctog').onclick = () => block.classList.toggle('open');
+      const vp = block.querySelector('#vp-'+cid);
+      if (!vids.length) {
+        vp.innerHTML = `<div class="empty-st" style="padding:10px 0"><div class="empty-st-tx">No videos yet.</div></div>`;
+      } else {
+        vids.forEach((v, vi) => {
+          const row = document.createElement('div'); row.className='vrow';
+          if (v.thumbnail) {
+            const vt = document.createElement('img'); vt.className='vr-thumb'; vt.src=v.thumbnail; vt.alt='';
+            vt.onerror = () => vt.replaceWith(Object.assign(document.createElement('div'),{className:'vr-thumb-fallback',textContent:'▶'}));
+            row.appendChild(vt);
+          } else {
+            row.appendChild(Object.assign(document.createElement('div'),{className:'vr-thumb-fallback',textContent:'▶'}));
+          }
+          const vbody = document.createElement('div'); vbody.className='vr-body';
+          vbody.innerHTML = `<div class="vr-nm">${v.title||'Video '+(vi+1)}</div>`;
+          const vic = document.createElement('div'); vic.className='vr-ic'; vic.textContent='▶';
+          row.appendChild(vbody); row.appendChild(vic);
+          row.onclick = () => openPlayer(subj.name, chap.name, vids, vi);
+          vp.appendChild(row);
+        });
+      }
+      list.appendChild(block); ci++;
+    });
+  });
+}
+
+/* PLAYER */
+function openPlayer(subjName, chapName, vids, startIdx) {
+  showPane('playerPane');
+  $('bc-subject').textContent = subjName;
+  $('bc-chapter').textContent = chapName;
+  $('plTitle').textContent = chapName;
+  $('plSub').textContent = `${vids.length} video${vids.length!==1?'s':''}`;
+
+  function playVideo(idx) {
+    const v = vids[idx]; const ytId = getYtId(v.url||'');
+    $('bc-video').textContent = v.title||'Video '+(idx+1);
+    $('vidTitle').textContent = v.title||'Video '+(idx+1);
+    $('vidChapter').textContent = chapName;
+    $('vidSubjectMeta').textContent = subjName;
+    if (ytId) {
+      $('ytWrap').style.display='block'; $('extLinkWrap').style.display='none';
+      $('ytFrame').src = ytEmbed(ytId);
+    } else {
+      $('ytWrap').style.display='none'; $('extLinkWrap').style.display='block';
+      $('extLink').href = v.url||'#';
+    }
+    document.querySelectorAll('.pl-item').forEach((el,i) => el.classList.toggle('active', i===idx));
+    $('plList').children[idx]?.scrollIntoView({block:'nearest'});
+  }
+
+  const plList = $('plList'); plList.innerHTML = '';
+  vids.forEach((v, i) => {
+    const item = document.createElement('div'); item.className='pl-item';
+    if (v.thumbnail) {
+      const pt = document.createElement('img'); pt.className='pl-thumb'; pt.src=v.thumbnail; pt.alt='';
+      pt.onerror = () => pt.replaceWith(Object.assign(document.createElement('div'),{className:'pl-thumb-fallback',textContent:'▶'}));
+      item.appendChild(pt);
+    } else {
+      item.appendChild(Object.assign(document.createElement('div'),{className:'pl-thumb-fallback',textContent:'▶'}));
+    }
+    const pbody = document.createElement('div'); pbody.className='pl-item-body';
+    pbody.innerHTML = `<div class="pl-item-nm">${v.title||'Video '+(i+1)}</div><div class="pl-item-num">#${String(i+1).padStart(2,'0')}</div>`;
+    const pic = document.createElement('div'); pic.className='pl-play-ic'; pic.textContent='▶';
+    item.appendChild(pbody); item.appendChild(pic);
+    item.onclick = () => playVideo(i);
+    plList.appendChild(item);
+  });
+  playVideo(startIdx);
+  $('playerBack').onclick = () => { $('ytFrame').src=''; showPane('subjectPane'); };
+}
+
+$('spBack').onclick = () => showPane('dashPane');
+$('logoHome').onclick = () => showPane('dashPane');
+
+setTimeout(() => {
+  $('loader').classList.add('hide');
+  showPane('dashPane');
+  loadSubjects();
+  loadAllLiveClasses();
+}, 1200);
+</script>
+
+<script>
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("selectstart", e => e.preventDefault());
+document.addEventListener("dragstart", e => e.preventDefault());
+document.addEventListener("keydown", e => {
+  const k = e.key.toUpperCase();
+  if (k==="F12"||(e.ctrlKey&&e.shiftKey&&["I","J","C"].includes(k))||(e.ctrlKey&&k==="U")) {
+    e.preventDefault(); e.stopPropagation();
+  }
+});
+</script>
+</body>
+</html>  
